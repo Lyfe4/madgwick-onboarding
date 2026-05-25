@@ -105,10 +105,6 @@ export default function SignupScreen({ form, set, next }) {
           I agree to the <a href="#" onClick={e => e.preventDefault()}>Terms of Service</a> and{' '}
           <a href="#" onClick={e => e.preventDefault()}>Privacy Policy</a>.
         </Checkbox>
-        <Checkbox checked={form.marketing} onChange={v => set('marketing', v)}>
-          I&rsquo;d like to receive occasional updates from Madgwick Studio.{' '}
-          <span style={{ color: 'var(--muted-foreground)' }}>(optional)</span>
-        </Checkbox>
       </div>
 
       <div className="actions">

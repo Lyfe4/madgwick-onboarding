@@ -1,40 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
 import Icon from './components/Icon.jsx';
 import BrandMark from './components/BrandMark.jsx';
-import ProgressBar from './components/ProgressBar.jsx';
 import SignupScreen from './screens/SignupScreen.jsx';
 import VerifyEmailScreen from './screens/VerifyEmailScreen.jsx';
-import SingleSelectScreen from './screens/SingleSelectScreen.jsx';
-import MultiSelectChipsScreen from './screens/MultiSelectChipsScreen.jsx';
-import OrgScreen from './screens/OrgScreen.jsx';
-import LocationScreen from './screens/LocationScreen.jsx';
-import HeardScreen from './screens/HeardScreen.jsx';
+import ProfileScreen from './screens/ProfileScreen.jsx';
 import WelcomeScreen from './screens/WelcomeScreen.jsx';
-import {
-  ROLE_OPTIONS, EXPERIENCE_OPTIONS, GOAL_OPTIONS, INTEREST_OPTIONS,
-} from './data/options.js';
 
 const STEPS = [
-  { id: 'signup',       kind: 'auth',       title: 'Create account' },
-  { id: 'verify',       kind: 'auth',       title: 'Verify email' },
-  { id: 'role',         kind: 'onboarding', title: 'Your role' },
-  { id: 'experience',   kind: 'onboarding', title: 'Experience' },
-  { id: 'goals',        kind: 'onboarding', title: 'Goals' },
-  { id: 'interests',    kind: 'onboarding', title: 'Interests' },
-  { id: 'organisation', kind: 'onboarding', title: 'Organisation' },
-  { id: 'location',     kind: 'onboarding', title: 'Location' },
-  { id: 'heard',        kind: 'onboarding', title: 'How you heard' },
-  { id: 'welcome',      kind: 'welcome',    title: 'Welcome' },
+  { id: 'signup',  kind: 'auth',       title: 'Create account' },
+  { id: 'verify',  kind: 'auth',       title: 'Verify email' },
+  { id: 'profile', kind: 'onboarding', title: 'About you' },
+  { id: 'welcome', kind: 'welcome',    title: 'Welcome' },
 ];
 
 const STORAGE_KEY = 'madgwick-onboarding';
 
 const EMPTY_FORM = {
   firstName: '', lastName: '', email: '', password: '', confirmPassword: '',
-  agreed: false, marketing: false,
-  role: null, experience: null,
-  goals: [], interests: [],
-  organisation: '', preferNot: false,
+  agreed: false,
+  role: null,
+  goals: [],
   state: '',
   heard: null,
 };
@@ -69,11 +54,6 @@ export default function App() {
   const skip = next; // skip is semantically identical to next
 
   const step = STEPS[stepIdx];
-  const onboardingSteps = STEPS.filter(s => s.kind === 'onboarding');
-  const onboardingIdx = onboardingSteps.findIndex(s => s.id === step.id);
-  const showProgress = step.kind === 'onboarding';
-  const progressValue = showProgress ? (onboardingIdx + 1) / onboardingSteps.length : 0;
-  const progressLabel = showProgress ? `Step ${onboardingIdx + 1} of ${onboardingSteps.length}` : '';
   const showBack = stepIdx > 0 && step.id !== 'welcome';
 
   const handleEnterDashboard = () => {
@@ -92,62 +72,8 @@ export default function App() {
     case 'verify':
       screen = <VerifyEmailScreen form={form} set={set} next={next} />;
       break;
-    case 'role':
-      screen = (
-        <SingleSelectScreen
-          title="What best describes your role?"
-          sub="Help us tailor your experience — we'll surface content that fits where you are."
-          options={ROLE_OPTIONS}
-          value={form.role}
-          onChange={v => set('role', v)}
-          next={next} skip={skip}
-        />
-      );
-      break;
-    case 'experience':
-      screen = (
-        <SingleSelectScreen
-          title="How experienced are you?"
-          sub="There's no wrong answer — we'll pitch the content to match."
-          options={EXPERIENCE_OPTIONS}
-          value={form.experience}
-          onChange={v => set('experience', v)}
-          next={next} skip={skip}
-        />
-      );
-      break;
-    case 'goals':
-      screen = (
-        <MultiSelectChipsScreen
-          title="What are you hoping to get out of Madgwick Studio?"
-          sub="We'll recommend a starting point at the end."
-          options={GOAL_OPTIONS}
-          value={form.goals}
-          onChange={v => set('goals', v)}
-          next={next} skip={skip}
-        />
-      );
-      break;
-    case 'interests':
-      screen = (
-        <MultiSelectChipsScreen
-          title="Which areas interest you?"
-          sub="These become content tags."
-          options={INTEREST_OPTIONS}
-          value={form.interests}
-          onChange={v => set('interests', v)}
-          next={next} skip={skip}
-        />
-      );
-      break;
-    case 'organisation':
-      screen = <OrgScreen form={form} set={set} next={next} skip={skip} />;
-      break;
-    case 'location':
-      screen = <LocationScreen form={form} set={set} next={next} skip={skip} />;
-      break;
-    case 'heard':
-      screen = <HeardScreen form={form} set={set} next={next} skip={skip} />;
+    case 'profile':
+      screen = <ProfileScreen form={form} set={set} next={next} skip={skip} />;
       break;
     case 'welcome':
       screen = <WelcomeScreen form={form} onEnter={handleEnterDashboard} />;
@@ -160,7 +86,6 @@ export default function App() {
     <div className="frame">
       <header className="topbar">
         <BrandMark />
-        {showProgress && <ProgressBar value={progressValue} label={progressLabel} />}
         <div className="topbar-right">
           {showBack && (
             <button className="topbar-back" onClick={back} aria-label="Back">

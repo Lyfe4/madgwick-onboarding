@@ -18,13 +18,6 @@ export const ROLE_OPTIONS = [
   { id: 'other',        label: 'Other',                   sub: 'None of these quite fit.',                    icon: 'help-circle' },
 ];
 
-export const EXPERIENCE_OPTIONS = [
-  { id: 'new',     label: 'Just starting out',  sub: 'Less than a year of hands-on experience.' },
-  { id: 'some',    label: 'Some experience',    sub: '1 – 3 years.' },
-  { id: 'mid',     label: 'Experienced',        sub: '3 – 5 years.' },
-  { id: 'senior',  label: 'Highly experienced', sub: '5+ years.' },
-];
-
 export const GOAL_OPTIONS = [
   { id: 'foundational', label: 'Build foundational knowledge' },
   { id: 'refresh',      label: 'Refresh existing skills' },
@@ -33,18 +26,6 @@ export const GOAL_OPTIONS = [
   { id: 'explore',      label: 'Explore new topics' },
   { id: 'team',         label: 'Train my team or unit' },
   { id: 'other',        label: 'Something else' },
-];
-
-export const INTEREST_OPTIONS = [
-  { id: 'theory',         label: 'Theory & fundamentals' },
-  { id: 'hands-on',       label: 'Hands-on practice' },
-  { id: 'leadership',     label: 'Leadership & management' },
-  { id: 'safety',         label: 'Safety & compliance' },
-  { id: 'communication',  label: 'Communication' },
-  { id: 'wellbeing',      label: 'Wellbeing & resilience' },
-  { id: 'tech',           label: 'Tools & technology' },
-  { id: 'community',      label: 'Community engagement' },
-  { id: 'planning',       label: 'Planning & strategy' },
 ];
 
 export const AU_STATES = [
