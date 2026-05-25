@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <rect width="96" height="96" rx="22" fill="#000"></rect>
+  <g text-anchor="middle" font-family="Inter, system-ui, sans-serif">
+    <text x="48" y="52" font-size="36" font-weight="700" fill="#91D62E" letter-spacing="-1.6">m</text>
+    <text x="48" y="73" font-size="11" font-weight="600" fill="#fff" letter-spacing="1.4">STUDIO</text>
+  </g>
+</svg>
