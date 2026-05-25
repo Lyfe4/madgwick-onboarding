@@ -1,5 +1,5 @@
 import Icon from '../components/Icon.jsx';
-import OptionCard from '../components/form/OptionCard.jsx';
+import { OptionCard } from '../components/form/index.js';
 
 export default function SingleSelectScreen({
   title, sub, options, value, onChange, next, skip, autoAdvance = true,

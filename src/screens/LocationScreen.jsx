@@ -1,7 +1,5 @@
 import Icon from '../components/Icon.jsx';
-import Field from '../components/form/Field.jsx';
-import TextInput from '../components/form/TextInput.jsx';
-import Select from '../components/form/Select.jsx';
+import { Field, Select } from '../components/form/index.js';
 import { AU_STATES } from '../data/options.js';
 
 export default function LocationScreen({ form, set, next, skip }) {
@@ -13,10 +11,13 @@ export default function LocationScreen({ form, set, next, skip }) {
       </div>
       <div className="fields">
         <Field label="State or territory" htmlFor="state">
-          <Select id="state" value={form.state} onChange={v => set('state', v)} options={AU_STATES} placeholder="Select your state" />
-        </Field>
-        <Field label="Postcode" htmlFor="postcode" help="Optional. Helps with local events.">
-          <TextInput id="postcode" value={form.postcode} onChange={v => set('postcode', v.replace(/\D/g, '').slice(0, 4))} placeholder="2350" />
+          <Select
+            id="state"
+            value={form.state}
+            onChange={v => set('state', v)}
+            options={AU_STATES}
+            placeholder="Select your state"
+          />
         </Field>
       </div>
       <div className="actions">

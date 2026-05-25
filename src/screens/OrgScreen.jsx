@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import Field from '../components/form/Field.jsx';
-import TextInput from '../components/form/TextInput.jsx';
-import Checkbox from '../components/form/Checkbox.jsx';
+import { Field, TextInput, Checkbox } from '../components/form/index.js';
 
 export default function OrgScreen({ form, set, next, skip }) {
   const [prefer, setPrefer] = useState(form.preferNot || false);
@@ -14,9 +12,22 @@ export default function OrgScreen({ form, set, next, skip }) {
       </div>
       <div className="fields">
         <Field label="Organisation or brigade" htmlFor="org">
-          <TextInput id="org" value={form.organisation} onChange={v => set('organisation', v)} placeholder="e.g. NSW RFS · Armidale Brigade" autoFocus />
+          <TextInput
+            id="org"
+            value={form.organisation}
+            onChange={v => set('organisation', v)}
+            placeholder="e.g. NSW RFS · Armidale Brigade"
+            autoFocus
+          />
         </Field>
-        <Checkbox checked={prefer} onChange={(v) => { setPrefer(v); set('preferNot', v); if (v) set('organisation', ''); }}>
+        <Checkbox
+          checked={prefer}
+          onChange={(v) => {
+            setPrefer(v);
+            set('preferNot', v);
+            if (v) set('organisation', '');
+          }}
+        >
           I&rsquo;d rather not say.
         </Checkbox>
       </div>

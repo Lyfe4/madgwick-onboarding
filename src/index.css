@@ -13,8 +13,9 @@
    Usage in this React app: imported once in src/main.jsx as `./index.css`.
 ============================================================================= */
 
-/* ── Inter Variable from Google Fonts (the codebase uses @fontsource-variable/inter) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Inter is loaded via <link> in index.html — non-render-blocking.
+   Do not re-add @import here as CSS @import is parsed after the stylesheet
+   itself downloads, creating an extra sequential network round-trip. */
 
 :root {
   /* ── Surfaces ─────────────────────────────────────────────────── */
@@ -299,6 +300,17 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+/* Screen-reader only — visually hidden but accessible to assistive tech */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
 * { box-sizing: border-box; }
 button { font: inherit; cursor: pointer; border: 0; background: transparent; padding: 0; color: inherit; }
 input, select, textarea { font: inherit; }

@@ -1,13 +1,13 @@
 import Icon from '../components/Icon.jsx';
-import Chip from '../components/form/Chip.jsx';
+import { Chip } from '../components/form/index.js';
 
 export default function MultiSelectChipsScreen({
   title, sub, options, value, onChange, next, skip, min = 0, max = Infinity,
 }) {
   const selected = value || [];
   const toggle = (id) => {
-    if (selected.includes(id))   return onChange(selected.filter(x => x !== id));
-    if (selected.length >= max)  return;
+    if (selected.includes(id))  return onChange(selected.filter(x => x !== id));
+    if (selected.length >= max) return;
     onChange([...selected, id]);
   };
   const enough = selected.length >= min;

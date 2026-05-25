@@ -35,7 +35,7 @@ const EMPTY_FORM = {
   role: null, experience: null,
   goals: [], interests: [],
   organisation: '', preferNot: false,
-  state: '', postcode: '',
+  state: '',
   heard: null,
 };
 
@@ -74,10 +74,11 @@ export default function App() {
   const showBack = stepIdx > 0 && step.id !== 'welcome';
 
   const handleEnterDashboard = () => {
-    // In a real app this would route to /lessons or /dashboard.
-    // For the standalone prototype, we just reset.
     localStorage.removeItem(STORAGE_KEY);
-    alert("Off to the dashboard! (Hook this up to your real router or use window.location.)");
+    // TODO: Replace with navigate('/dashboard') once react-router-dom is added.
+    // Resets the prototype so it can be demoed again without a page refresh.
+    setForm(EMPTY_FORM);
+    setStepIdx(0);
   };
 
   let screen;

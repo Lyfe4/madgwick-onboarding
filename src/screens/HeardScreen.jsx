@@ -1,5 +1,5 @@
 import Icon from '../components/Icon.jsx';
-import OptionCard from '../components/form/OptionCard.jsx';
+import { OptionCard } from '../components/form/index.js';
 import { HEARD_OPTIONS } from '../data/options.js';
 
 export default function HeardScreen({ form, set, next, skip }) {

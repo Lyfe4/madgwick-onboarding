@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import Field from '../components/form/Field.jsx';
-import TextInput from '../components/form/TextInput.jsx';
-import PasswordInput from '../components/form/PasswordInput.jsx';
-import Checkbox from '../components/form/Checkbox.jsx';
+import { Field, TextInput, PasswordInput, Checkbox } from '../components/form/index.js';
 
 export default function SignupScreen({ form, set, next }) {
   const [agreed, setAgreed] = useState(form.agreed || false);
   const [marketing, setMarketing] = useState(form.marketing || false);
   const [touched, setTouched] = useState({});
 
-  const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email || '');
-  const passwordValid = (form.password || '').length >= 8;
+  // touch(key) marks a single field as visited (called onBlur)
+  const touch = (key) => setTouched(t => ({ ...t, [key]: true }));
+
+  const emailValid     = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email || '');
+  const passwordValid  = (form.password || '').length >= 8;
   const passwordsMatch = form.password === form.confirmPassword;
+
   const canSubmit =
     form.firstName && form.lastName && emailValid && passwordValid && passwordsMatch && agreed;
 
   const submit = (e) => {
     e.preventDefault();
-    setTouched({ firstName: 1, lastName: 1, email: 1, password: 1, confirmPassword: 1 });
+    // Mark all fields touched so every error surfaces on submit
+    setTouched({ firstName: true, lastName: true, email: true, password: true, confirmPassword: true });
     if (canSubmit) {
       set('agreed', agreed);
       set('marketing', marketing);
@@ -28,8 +30,8 @@ export default function SignupScreen({ form, set, next }) {
 
   return (
     <form className="page-inner" onSubmit={submit} noValidate>
-      <div className="signup-hero" aria-hidden>
-        <img src="/madgwick-studio-lockup.png" alt=""/>
+      <div className="signup-hero" aria-hidden="true">
+        <img src="/madgwick-studio-lockup.png" alt="" />
       </div>
       <div className="page-head">
         <h1>Create your account</h1>
@@ -40,37 +42,72 @@ export default function SignupScreen({ form, set, next }) {
         <div className="field-row">
           <Field label="First name" htmlFor="firstName" required
             error={touched.firstName && !form.firstName ? 'Required' : null}>
-            <TextInput id="firstName" value={form.firstName} onChange={v => set('firstName', v)} autoFocus autoComplete="given-name" />
+            <TextInput
+              id="firstName"
+              value={form.firstName}
+              onChange={v => set('firstName', v)}
+              onBlur={() => touch('firstName')}
+              autoFocus
+              autoComplete="given-name"
+            />
           </Field>
           <Field label="Last name" htmlFor="lastName" required
             error={touched.lastName && !form.lastName ? 'Required' : null}>
-            <TextInput id="lastName" value={form.lastName} onChange={v => set('lastName', v)} autoComplete="family-name" />
+            <TextInput
+              id="lastName"
+              value={form.lastName}
+              onChange={v => set('lastName', v)}
+              onBlur={() => touch('lastName')}
+              autoComplete="family-name"
+            />
           </Field>
         </div>
 
         <Field label="Email" htmlFor="email" required
-          error={touched.email && form.email && !emailValid ? 'Use a valid email address' : null}>
-          <TextInput id="email" type="email" value={form.email} onChange={v => set('email', v)} placeholder="you@example.com" autoComplete="email" />
+          error={touched.email && !emailValid ? 'Use a valid email address' : null}>
+          <TextInput
+            id="email"
+            type="email"
+            value={form.email}
+            onChange={v => set('email', v)}
+            onBlur={() => touch('email')}
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
         </Field>
 
         <Field label="Password" htmlFor="password" required
           help={!touched.password ? 'At least 8 characters.' : null}
-          error={touched.password && form.password && !passwordValid ? 'At least 8 characters' : null}>
-          <PasswordInput id="password" value={form.password} onChange={v => set('password', v)} />
+          error={touched.password && !passwordValid ? 'At least 8 characters' : null}>
+          <PasswordInput
+            id="password"
+            value={form.password}
+            onChange={v => set('password', v)}
+            onBlur={() => touch('password')}
+          />
         </Field>
 
         <Field label="Confirm password" htmlFor="confirmPassword" required
-          error={touched.confirmPassword && form.confirmPassword && !passwordsMatch ? "Passwords don't match" : null}>
-          <PasswordInput id="confirmPassword" value={form.confirmPassword} onChange={v => set('confirmPassword', v)} />
+          error={touched.confirmPassword && form.confirmPassword && !passwordsMatch
+            ? "Passwords don't match"
+            : null}>
+          <PasswordInput
+            id="confirmPassword"
+            value={form.confirmPassword}
+            onChange={v => set('confirmPassword', v)}
+            onBlur={() => touch('confirmPassword')}
+          />
         </Field>
       </div>
 
       <div className="fields" style={{ gap: 4 }}>
         <Checkbox checked={agreed} onChange={setAgreed}>
-          I agree to the <a href="#" onClick={e => e.preventDefault()}>Terms of Service</a> and <a href="#" onClick={e => e.preventDefault()}>Privacy Policy</a>.
+          I agree to the <a href="#" onClick={e => e.preventDefault()}>Terms of Service</a> and{' '}
+          <a href="#" onClick={e => e.preventDefault()}>Privacy Policy</a>.
         </Checkbox>
         <Checkbox checked={marketing} onChange={setMarketing}>
-          I&rsquo;d like to receive occasional updates from Madgwick Studio. <span style={{ color: 'var(--muted-foreground)' }}>(optional)</span>
+          I&rsquo;d like to receive occasional updates from Madgwick Studio.{' '}
+          <span style={{ color: 'var(--muted-foreground)' }}>(optional)</span>
         </Checkbox>
       </div>
 
