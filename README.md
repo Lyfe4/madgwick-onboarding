@@ -1,4 +1,4 @@
-# Madgwick Studio — Onboarding
+# Madgwick Studio — Onboarding UI
 
 A standalone React + Vite app for the **Madgwick Studio** signup and onboarding flow. Lifted from the larger Madgwick Studio design system project and packaged so it can run on its own or merge into the main codebase.
 
