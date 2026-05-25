@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Icon from './components/Icon.jsx';
 import BrandMark from './components/BrandMark.jsx';
 import ProgressBar from './components/ProgressBar.jsx';
@@ -60,10 +60,13 @@ export default function App() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ form, stepIdx })); } catch {}
   }, [form, stepIdx]);
 
-  const set = (key, value) => setForm(f => ({ ...f, [key]: value }));
-  const next = () => setStepIdx(i => Math.min(STEPS.length - 1, i + 1));
-  const back = () => setStepIdx(i => Math.max(0, i - 1));
-  const skip = () => next();
+  // useCallback with empty deps is safe here because all three functions use
+  // functional updaters (no direct closure over state), so they never need
+  // to be re-created after mount.
+  const set  = useCallback((key, value) => setForm(f => ({ ...f, [key]: value })), []);
+  const next = useCallback(() => setStepIdx(i => Math.min(STEPS.length - 1, i + 1)), []);
+  const back = useCallback(() => setStepIdx(i => Math.max(0, i - 1)), []);
+  const skip = next; // skip is semantically identical to next
 
   const step = STEPS[stepIdx];
   const onboardingSteps = STEPS.filter(s => s.kind === 'onboarding');

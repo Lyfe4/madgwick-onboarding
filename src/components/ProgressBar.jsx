@@ -5,6 +5,7 @@ export default function ProgressBar({ value, label }) {
       <div
         className="progress-track"
         role="progressbar"
+        aria-label="Onboarding progress"
         aria-valuenow={pct}
         aria-valuemin="0"
         aria-valuemax="100"

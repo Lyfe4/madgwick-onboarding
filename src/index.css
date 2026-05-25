@@ -293,13 +293,11 @@ html, body {
 ============================================================================= */
 
 /* Onboarding-specific styles, layered on the Madgwick Studio design system tokens. */
+/* Full-height layout — needed for the flex column in .frame */
 html, body, #root { height: 100%; margin: 0; }
-body {
-  background: color-mix(in oklch, var(--muted), transparent 30%);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
+/* Override the design-system background with the onboarding-specific tinted
+   wash.  font-family and -webkit-font-smoothing are already set above. */
+body { background: color-mix(in oklch, var(--muted), transparent 30%); }
 /* Screen-reader only — visually hidden but accessible to assistive tech */
 .sr-only {
   position: absolute;

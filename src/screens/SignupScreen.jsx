@@ -3,8 +3,6 @@ import Icon from '../components/Icon.jsx';
 import { Field, TextInput, PasswordInput, Checkbox } from '../components/form/index.js';
 
 export default function SignupScreen({ form, set, next }) {
-  const [agreed, setAgreed] = useState(form.agreed || false);
-  const [marketing, setMarketing] = useState(form.marketing || false);
   const [touched, setTouched] = useState({});
 
   // touch(key) marks a single field as visited (called onBlur)
@@ -15,17 +13,13 @@ export default function SignupScreen({ form, set, next }) {
   const passwordsMatch = form.password === form.confirmPassword;
 
   const canSubmit =
-    form.firstName && form.lastName && emailValid && passwordValid && passwordsMatch && agreed;
+    form.firstName && form.lastName && emailValid && passwordValid && passwordsMatch && form.agreed;
 
   const submit = (e) => {
     e.preventDefault();
     // Mark all fields touched so every error surfaces on submit
     setTouched({ firstName: true, lastName: true, email: true, password: true, confirmPassword: true });
-    if (canSubmit) {
-      set('agreed', agreed);
-      set('marketing', marketing);
-      next();
-    }
+    if (canSubmit) next();
   };
 
   return (
@@ -101,11 +95,17 @@ export default function SignupScreen({ form, set, next }) {
       </div>
 
       <div className="fields" style={{ gap: 4 }}>
-        <Checkbox checked={agreed} onChange={setAgreed}>
+        {/*
+          Drive agreed/marketing directly from the shared `form` object rather
+          than duplicating them in local useState.  This keeps a single source
+          of truth and ensures values are persisted to localStorage immediately
+          on change, not just on submit.
+        */}
+        <Checkbox checked={form.agreed} onChange={v => set('agreed', v)}>
           I agree to the <a href="#" onClick={e => e.preventDefault()}>Terms of Service</a> and{' '}
           <a href="#" onClick={e => e.preventDefault()}>Privacy Policy</a>.
         </Checkbox>
-        <Checkbox checked={marketing} onChange={setMarketing}>
+        <Checkbox checked={form.marketing} onChange={v => set('marketing', v)}>
           I&rsquo;d like to receive occasional updates from Madgwick Studio.{' '}
           <span style={{ color: 'var(--muted-foreground)' }}>(optional)</span>
         </Checkbox>

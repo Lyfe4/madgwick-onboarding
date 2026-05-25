@@ -47,7 +47,17 @@ export default function VerifyEmailScreen({ form, next }) {
         </p>
       </div>
 
-      <div className="code-grid" onPaste={onPaste}>
+      {/*
+        role="group" + aria-label gives the six individual digit inputs a
+        collective accessible name so screen readers announce "Verification
+        code, group" before reading each "Digit N" label.
+      */}
+      <div
+        className="code-grid"
+        role="group"
+        aria-label="6-digit verification code"
+        onPaste={onPaste}
+      >
         {digits.map((d, i) => (
           <input
             key={i}
@@ -64,7 +74,7 @@ export default function VerifyEmailScreen({ form, next }) {
       </div>
 
       <div className="actions">
-        <button className="btn-primary" disabled={!ready} onClick={next}>
+        <button type="button" className="btn-primary" disabled={!ready} onClick={next}>
           Verify and continue
           <Icon name="arrow-right" size={16} />
         </button>
@@ -74,11 +84,11 @@ export default function VerifyEmailScreen({ form, next }) {
           ) : (
             <>
               <span>Didn&rsquo;t get it?</span>
-              <button className="link-btn" onClick={() => setSeconds(45)}>Resend code</button>
+              <button type="button" className="link-btn" onClick={() => setSeconds(45)}>Resend code</button>
             </>
           )}
         </div>
-        <button className="skip-link" onClick={next}>I&rsquo;ll verify later</button>
+        <button type="button" className="skip-link" onClick={next}>I&rsquo;ll verify later</button>
       </div>
     </div>
   );

@@ -25,7 +25,11 @@ export default function WelcomeScreen({ form, onEnter }) {
       {recs.length > 0 && (
         <div className="welcome-cards">
           {recs.map(r => (
-            <button key={r.id} className="rec-card">
+            // type="button" prevents the browser treating these as form-submit
+            // triggers if the component is ever rendered inside a <form>.
+            // onClick is intentionally a no-op placeholder — swap for
+            // navigate(`/courses/${r.id}`) once react-router-dom is wired up.
+            <button key={r.id} type="button" className="rec-card" onClick={onEnter}>
               <span className="rec-thumb">
                 <Icon name={r.icon} size={18} />
               </span>
@@ -40,11 +44,11 @@ export default function WelcomeScreen({ form, onEnter }) {
       )}
 
       <div className="actions">
-        <button className="btn-primary" onClick={onEnter}>
+        <button type="button" className="btn-primary" onClick={onEnter}>
           Take me to my dashboard
           <Icon name="arrow-right" size={16} />
         </button>
-        <button className="skip-link" onClick={onEnter}>I&rsquo;ll explore on my own</button>
+        <button type="button" className="skip-link" onClick={onEnter}>I&rsquo;ll explore on my own</button>
       </div>
     </div>
   );

@@ -1,8 +1,21 @@
+import { useRef } from 'react';
 import Icon from '../components/Icon.jsx';
 import { OptionCard } from '../components/form/index.js';
 import { HEARD_OPTIONS } from '../data/options.js';
 
 export default function HeardScreen({ form, set, next, skip }) {
+  // Guard against double-fire: if the user clicks two options very quickly,
+  // or React batches two state updates, we only want to auto-advance once.
+  const navigated = useRef(false);
+
+  const handleClick = (id) => {
+    set('heard', id);
+    if (!navigated.current) {
+      navigated.current = true;
+      setTimeout(next, 220);
+    }
+  };
+
   return (
     <div className="page-inner">
       <div className="page-head">
@@ -16,16 +29,16 @@ export default function HeardScreen({ form, set, next, skip }) {
             title={o.label}
             compact
             checked={form.heard === o.id}
-            onClick={() => { set('heard', o.id); setTimeout(next, 220); }}
+            onClick={() => handleClick(o.id)}
           />
         ))}
       </div>
       <div className="actions">
-        <button className="btn-primary" disabled={!form.heard} onClick={next}>
+        <button type="button" className="btn-primary" disabled={!form.heard} onClick={next}>
           Finish setup
           <Icon name="arrow-right" size={16} />
         </button>
-        <button className="skip-link" onClick={skip}>Skip and finish</button>
+        <button type="button" className="skip-link" onClick={skip}>Skip and finish</button>
       </div>
     </div>
   );
