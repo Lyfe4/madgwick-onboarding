@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from './components/Icon.jsx';
 import BrandMark from './components/BrandMark.jsx';
 import SignupScreen from './screens/SignupScreen.jsx';
@@ -27,6 +27,10 @@ const EMPTY_FORM = {
 export default function App() {
   const [stepIdx, setStepIdx] = useState(0);
   const [form, setForm] = useState(EMPTY_FORM);
+  const mainRef = useRef(null);
+  // Track whether the initial mount has completed so we don't steal focus
+  // away from the autoFocus on the first input of the signup screen.
+  const hasMounted = useRef(false);
 
   // Restore from localStorage on first load
   useEffect(() => {
@@ -44,6 +48,18 @@ export default function App() {
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ form, stepIdx })); } catch {}
   }, [form, stepIdx]);
+
+  // Focus management — when the user advances to a new step, move keyboard
+  // focus to <main> so screen readers announce the new page heading and
+  // keyboard users don't get stranded on the now-gone submit button.
+  // We skip the very first render so autoFocus on the first input still fires.
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    mainRef.current?.focus();
+  }, [stepIdx]);
 
   // useCallback with empty deps is safe here because all three functions use
   // functional updaters (no direct closure over state), so they never need
@@ -95,7 +111,20 @@ export default function App() {
         </div>
       </header>
 
-      <main className="page">{screen}</main>
+      {/*
+        tabIndex={-1} makes <main> programmatically focusable (needed for the
+        step-transition focus management above) without inserting it into the
+        natural tab order.  The outline is suppressed via CSS focus-visible
+        so sighted users never see a focus ring on the container itself.
+      */}
+      <main
+        ref={mainRef}
+        className="page"
+        tabIndex={-1}
+        style={{ outline: 'none' }}
+      >
+        {screen}
+      </main>
     </div>
   );
 }

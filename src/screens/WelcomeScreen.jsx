@@ -10,7 +10,7 @@ export default function WelcomeScreen({ form, onEnter }) {
   return (
     <div className="page-inner">
       <div className="welcome-mark">
-        <img src="/mark.svg" alt="Madgwick Studio"/>
+        <img src="/mark.svg" alt="Madgwick Studio" fetchpriority="high" />
       </div>
       <div className="page-head" style={{ alignItems: 'center', textAlign: 'center' }}>
         <span className="eyebrow">You&rsquo;re all set</span>

@@ -14,6 +14,11 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Preload images that appear later in the flow so they're already
+         cached by the time those screens render. -->
+    <link rel="preload" as="image" href="/mark.svg" />
+    <link rel="preload" as="image" href="/madgwick-studio-lockup.png" />
+
     <!-- Inter — preconnect first to avoid an extra round-trip, then load the
          stylesheet.  This is non-render-blocking unlike @import inside CSS. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

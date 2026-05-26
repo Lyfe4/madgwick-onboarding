@@ -9,13 +9,15 @@ import Icon from '../Icon.jsx';
  * Note: links inside the label are fine — clicking a link does not propagate
  * to toggle the checkbox (links handle their own click event first).
  */
-export default function Checkbox({ checked, onChange, children }) {
+export default function Checkbox({ checked, onChange, children, 'aria-describedby': ariaDescribedby, 'aria-required': ariaRequired }) {
   return (
     <label className="checkbox-row" data-checked={checked ? 'true' : 'false'}>
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
+        aria-describedby={ariaDescribedby}
+        aria-required={ariaRequired}
         style={{
           position: 'absolute',
           opacity: 0,

@@ -1,4 +1,4 @@
-export default function Select({ id, value, onChange, options, placeholder }) {
+export default function Select({ id, value, onChange, options, placeholder, ...rest }) {
   return (
     <select
       id={id}
@@ -6,6 +6,7 @@ export default function Select({ id, value, onChange, options, placeholder }) {
       className="select-input"
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
+      {...rest}
     >
       <option value="" disabled>{placeholder || 'Select…'}</option>
       {options.map(o => {

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import Icon from '../Icon.jsx';
 
 export default function PasswordInput({
-  id, value, onChange, onBlur, placeholder, autoComplete = 'new-password',
+  id, value, onChange, onBlur, onFocus, placeholder, autoComplete = 'new-password',
+  'aria-invalid': ariaInvalid, 'aria-describedby': ariaDescribedby,
 }) {
   const [show, setShow] = useState(false);
   return (
@@ -15,8 +16,11 @@ export default function PasswordInput({
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
+        onFocus={onFocus}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedby}
       />
       <button
         type="button"

@@ -1,4 +1,8 @@
 export default function Field({ label, htmlFor, required, help, error, children }) {
+  // A stable ID for the help/error text so inputs can reference it via
+  // aria-describedby and screen readers announce the message on re-focus.
+  const descId = htmlFor ? `${htmlFor}-desc` : undefined;
+
   return (
     <label className="field" htmlFor={htmlFor}>
       {label && (
@@ -18,9 +22,9 @@ export default function Field({ label, htmlFor, required, help, error, children 
       */}
       <span aria-live="polite" aria-atomic="true">
         {error ? (
-          <span className="help error">{error}</span>
+          <span id={descId} className="help error">{error}</span>
         ) : help ? (
-          <span className="help">{help}</span>
+          <span id={descId} className="help">{help}</span>
         ) : null}
       </span>
     </label>

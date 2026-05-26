@@ -345,7 +345,7 @@ input, select, textarea { font: inherit; }
   }
 }
 
-/* ─── Top bar (logo + progress) ─────────────────────────────────── */
+/* ─── Top bar ───────────────────────────────────────────────────── */
 .topbar {
   display: flex; align-items: center; gap: 12px;
   padding: 18px 28px; flex-shrink: 0;
@@ -355,27 +355,7 @@ input, select, textarea { font: inherit; }
 .topbar .brand img { display: block; width: 26px; height: 26px; }
 .topbar .brand .name { font: 600 16px/1 var(--font-sans); color: var(--foreground); letter-spacing: -0.01em; }
 
-.topbar .progress-area {
-  flex: 1; display: flex; align-items: center; gap: 14px;
-  max-width: 540px; margin: 0 auto;
-}
-.progress-track {
-  flex: 1; height: 4px; background: var(--muted);
-  border-radius: 9999px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; background: var(--primary);
-  border-radius: 9999px;
-  transition: width 320ms cubic-bezier(.4,.0,.2,1);
-}
-.progress-label {
-  font: 500 12px/1 var(--font-sans);
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.topbar .topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .topbar-back {
   display: inline-flex; align-items: center; gap: 4px;
   font: 500 13px/1 var(--font-sans); color: var(--muted-foreground);
@@ -451,6 +431,17 @@ input, select, textarea { font: inherit; }
 .text-input:focus-visible, .select-input:focus-visible {
   border-color: var(--ring);
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring), transparent 50%);
+}
+/* Error state — applied via aria-invalid="true" so the visual cue matches the
+   accessible state without needing a separate CSS class. */
+.text-input[aria-invalid="true"],
+.select-input[aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+.text-input[aria-invalid="true"]:focus-visible,
+.select-input[aria-invalid="true"]:focus-visible {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--destructive), transparent 70%);
 }
 .select-input {
   appearance: none;
@@ -714,4 +705,50 @@ input, select, textarea { font: inherit; }
 /* Animations between steps */
 .step-enter { opacity: 0; transform: translateY(8px); }
 .step-enter-active { opacity: 1; transform: translateY(0); transition: opacity 220ms ease-out, transform 220ms ease-out; }
+
+/* ─── Inline error banner (API-level errors) ───────────────────── */
+.error-banner {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  background: color-mix(in oklch, var(--destructive), transparent 90%);
+  border: 1px solid color-mix(in oklch, var(--destructive), transparent 70%);
+  border-radius: var(--radius-md);
+  font: 400 13px/1.5 var(--font-sans);
+  color: var(--destructive);
+}
+
+/* ─── Responsive — real-screen breakpoints ─────────────────────── */
+/* These rules cover real mobile browsers without needing the prototype's
+   data-viewport attribute.  They kick in below 640 px (approx. phone width). */
+@media (max-width: 640px) {
+  .topbar { padding: 14px 16px; }
+
+  .page { padding: 20px 16px 48px; }
+
+  .page-head h1 { font-size: 24px; }
+
+  /* Stack the first-name / last-name row vertically */
+  .field-row { flex-direction: column; gap: 16px; }
+
+  /* Shrink the signup hero on small screens */
+  .signup-hero { padding: 14px 20px; }
+  .signup-hero img { height: 44px; }
+
+  /* Narrow the OTP cells so all 6 fit without scrolling */
+  .code-cell { width: 44px; height: 56px; font-size: 20px; gap: 8px; }
+  .code-grid { gap: 8px; }
+}
+
+/* ─── Reduced-motion — respect user's OS preference ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+
+}
 

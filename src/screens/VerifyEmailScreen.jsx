@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
+import { auth } from '../lib/api.js';
 
 export default function VerifyEmailScreen({ form, next }) {
   const [digits, setDigits] = useState(['', '', '', '', '', '']);
   const [seconds, setSeconds] = useState(45);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+  const [resending, setResending] = useState(false);
   const refs = useRef([]);
 
   useEffect(() => {
@@ -21,9 +25,11 @@ export default function VerifyEmailScreen({ form, next }) {
     setDigits(nextDigits);
     if (v && i < 5) refs.current[i + 1]?.focus();
   };
+
   const onKeyDown = (i, e) => {
     if (e.key === 'Backspace' && !digits[i] && i > 0) refs.current[i - 1]?.focus();
   };
+
   const onPaste = (e) => {
     const text = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
     if (!text) return;
@@ -33,8 +39,47 @@ export default function VerifyEmailScreen({ form, next }) {
     refs.current[Math.min(text.length, 5)]?.focus();
   };
 
+  const handleVerify = async () => {
+    setLoading(true);
+    setApiError(null);
+    try {
+      await auth.verifyEmail(form.email, code);
+      next();
+    } catch (err) {
+      setApiError(
+        err.status === 400
+          ? 'That code is incorrect or has expired. Please try again.'
+          : (err.message || 'Something went wrong. Please try again.'),
+      );
+      // Clear the entered digits so the user can re-type cleanly.
+      setDigits(['', '', '', '', '', '']);
+      // Return focus to the first cell.
+      refs.current[0]?.focus();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setResending(true);
+    setApiError(null);
+    try {
+      await auth.resendCode(form.email);
+      setSeconds(45);
+    } catch (err) {
+      setApiError(err.message || 'Could not resend. Please try again.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (ready && !loading) handleVerify();
+  };
+
   return (
-    <div className="page-inner">
+    <form className="page-inner" onSubmit={handleSubmit} noValidate>
       <div className="celebrate">
         <Icon name="mail" size={28} />
       </div>
@@ -46,6 +91,13 @@ export default function VerifyEmailScreen({ form, next }) {
           <br/>Enter it below to verify your account.
         </p>
       </div>
+
+      {/* API-level error banner */}
+      {apiError && (
+        <div className="error-banner" role="alert">
+          {apiError}
+        </div>
+      )}
 
       {/*
         role="group" + aria-label gives the six individual digit inputs a
@@ -74,9 +126,14 @@ export default function VerifyEmailScreen({ form, next }) {
       </div>
 
       <div className="actions">
-        <button type="button" className="btn-primary" disabled={!ready} onClick={next}>
-          Verify and continue
-          <Icon name="arrow-right" size={16} />
+        <button
+          type="button"
+          className="btn-primary"
+          disabled={!ready || loading}
+          onClick={handleVerify}
+        >
+          {loading ? 'Verifying…' : 'Verify and continue'}
+          {!loading && <Icon name="arrow-right" size={16} />}
         </button>
         <div className="resend-row">
           {seconds > 0 ? (
@@ -84,12 +141,19 @@ export default function VerifyEmailScreen({ form, next }) {
           ) : (
             <>
               <span>Didn&rsquo;t get it?</span>
-              <button type="button" className="link-btn" onClick={() => setSeconds(45)}>Resend code</button>
+              <button
+                type="button"
+                className="link-btn"
+                disabled={resending}
+                onClick={handleResend}
+              >
+                {resending ? 'Sending…' : 'Resend code'}
+              </button>
             </>
           )}
         </div>
         <button type="button" className="skip-link" onClick={next}>I&rsquo;ll verify later</button>
       </div>
-    </div>
+    </form>
   );
 }
